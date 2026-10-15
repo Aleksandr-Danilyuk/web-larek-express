@@ -25,7 +25,7 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
       { title: 1, price: 1 },
     ).lean<ProductLeanDoc[]>();
 
-    const foundIds = new Set(products.map((p) => p._id));
+    const foundIds = new Set(products.map((p) => p._id.toString()));
     const missingIds = items.filter((id: string) => !foundIds.has(id));
     if (missingIds.length > 0) {
       throw new BadRequestError(`Товар с ID ${missingIds[0]} не найден`);
