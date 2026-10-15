@@ -25,7 +25,7 @@ export const requestLogger = expressWinston.logger({
   colorize: false,
 });
 
-// только ошибки 
+// только ошибки
 export const errorLogger = expressWinston.errorLogger({
   transports: [
     new winston.transports.File({

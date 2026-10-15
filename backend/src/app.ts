@@ -4,7 +4,7 @@ import path from 'path';
 import productsRouter from './routes/products';
 import orderRouter from './routes/order';
 import { errors as celebrateErrors } from 'celebrate';
-import { errorHandler } from './middlewares/error-handler';
+import errorHandler from './middlewares/error-handler';
 import { requestLogger, errorLogger } from './middlewares/logger';
 
 
@@ -21,11 +21,11 @@ app.use(celebrateErrors());  // стандартное решение middleware
 app.use(errorLogger);   // логгер ошибок
 app.use(errorHandler);  // централизованный обработчик ошибок
 
-mongoose.connect('mongodb://127.0.0.1:27017/weblarek')
+mongoose.connect('mongodb://127.0.0.1:27017/weblarek');
 
 app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
 
 app.listen(PORT, () => {
-    console.log(`Hello world !`)
-    console.log(`App listening on port ${PORT}`)
-})
+    console.log(`Hello world !`);
+    console.log(`App listening on port ${PORT}`);
+});

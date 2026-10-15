@@ -1,23 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-import { BadRequestError } from '../errors/bad-request-error';
-import { ConflictError} from '../errors/conflict-error';
-import { NotFoundError } from '../errors/not-found-error';
-import { InternalServerError } from '../errors/server-error';
+import BadRequestError from '../errors/bad-request-error';
+import ConflictError from '../errors/conflict-error';
+import NotFoundError from '../errors/not-found-error';
+import InternalServerError from '../errors/server-error';
 
-export const errorHandler = (
+const errorHandler = (
   err: Error,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction,
 ) => {
   // Если это наша кастомная ошибка — используем её статус и сообщение
-  if (err instanceof BadRequestError || err instanceof ConflictError || 
-      err instanceof NotFoundError || err instanceof InternalServerError) {
+  if (
+    err instanceof BadRequestError
+    || err instanceof ConflictError
+    || err instanceof NotFoundError
+    || err instanceof InternalServerError
+  ) {
     return res.status(err.statusCode).json({ message: err.message });
   }
 
-  // Обработка дубликата уникального поля (E11000) — это не наша кастомная ошибка, но мы её распознаём
+  // Обработка дубликата уникального поля (E11000)
+  // это не наша кастомная ошибка, но мы её распознаём
   if (err instanceof Error && err.message.includes('E11000')) {
     return res.status(409).json({
       message: 'Ресурс с такими данными уже существует (например, дубликат title)',
@@ -36,3 +41,5 @@ export const errorHandler = (
     message: 'Внутренняя ошибка сервера',
   });
 };
+
+export default errorHandler;
