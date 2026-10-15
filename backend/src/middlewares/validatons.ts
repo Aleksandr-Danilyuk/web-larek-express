@@ -50,4 +50,39 @@ const validateProductOrder = celebrate(
   { abortEarly: false },
 );
 
+const productSchema = Joi.object({
+  title: Joi.string().min(3).max(100).required()
+    .messages({
+      'string.base': 'title должно быть строкой',
+      'string.min': 'title должен быть не короче 3 символов',
+      'string.max': 'title не должен превышать 100 символов',
+      'any.required': 'поле title обязательно',
+    }),
+  category: Joi.string().min(2).max(50).required()
+    .messages({
+      'string.base': 'category должно быть строкой',
+      'string.min': 'category должен быть не короче 2 символов',
+      'string.max': 'category не должен превышать 50 символов',
+      'any.required': 'поле category обязательно',
+    }),
+  description: Joi.string().allow(null, '').optional(),
+  price: Joi.number().allow(null)
+    .messages({
+      'number.base': 'price должно быть числом или null',
+    }),
+  image: Joi.object({
+    fileName: Joi.string().min(1).required()
+      .messages({ 'any.required': 'image.fileName обязателен', 'string.min': 'image.fileName не может быть пустым' }),
+    originalName: Joi.string().min(1).required()
+      .messages({ 'any.required': 'image.originalName обязателен', 'string.min': 'image.originalName не может быть пустым' }),
+  }).required()
+    .messages({ 'any.required': 'объект image обязателен' }),
+}).unknown(false);
+
+const validateCreateProduct = celebrate(
+  { [Segments.BODY]: productSchema },
+  { abortEarly: false },
+);
+
 export default validateProductOrder;
+export { validateCreateProduct };

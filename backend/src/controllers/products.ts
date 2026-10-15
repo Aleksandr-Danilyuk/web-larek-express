@@ -55,10 +55,6 @@ export const createProduct = (req: Request, res: Response, next: NextFunction): 
     title, image, category, description, price,
   } = req.body as Partial<IProduct>;
 
-  if (!title || !category || !image || !image.fileName || !image.originalName) {
-    throw new BadRequestError('Обязательны: title, category, image (fileName, originalName)');
-  }
-
   Product.create({
     title, image, category, description, price,
   })

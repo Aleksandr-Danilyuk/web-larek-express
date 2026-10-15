@@ -8,7 +8,7 @@ import errorHandler from './middlewares/error-handler';
 import { requestLogger, errorLogger } from './middlewares/logger';
 
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/weblarek' } = process.env;
 const app = express();
 app.use(express.json());
 
@@ -21,7 +21,12 @@ app.use(celebrateErrors());  // стандартное решение middleware
 app.use(errorLogger);   // логгер ошибок
 app.use(errorHandler);  // централизованный обработчик ошибок
 
-mongoose.connect('mongodb://127.0.0.1:27017/weblarek');
+// Подключение к БД
+if (!DB_ADDRESS) {
+  throw new Error('DB_ADDRESS не задан в .env');
+}
+
+mongoose.connect(DB_ADDRESS);
 
 app.use(express.static(path.join(__dirname, 'public'))); // теперь клиент имеет доступ только к публичным файлам
 
